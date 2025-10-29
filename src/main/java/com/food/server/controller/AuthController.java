@@ -38,7 +38,8 @@ public class AuthController extends BaseClass {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setSecure(true);
-        cookie.setMaxAge(24 * 60 * 60); // 1 day
+        cookie.setMaxAge(24 * 60 * 60);
+        cookie.setAttribute("SameSite", "None");
         response.addCookie(cookie);
         return ResponseEntity.ok("Login successful");
     }
