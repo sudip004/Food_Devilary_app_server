@@ -37,7 +37,7 @@ public class AuthController extends BaseClass {
         Cookie cookie = new Cookie("jwt", token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setSecure(false);
+        cookie.setSecure(true);
         cookie.setMaxAge(24 * 60 * 60); // 1 day
         response.addCookie(cookie);
         return ResponseEntity.ok("Login successful");
