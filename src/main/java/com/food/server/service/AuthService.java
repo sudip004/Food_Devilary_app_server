@@ -31,6 +31,7 @@ public class AuthService {
         if(!encoder.matches(password, user.getPassword())){
             throw new RuntimeException("Invalid credentials");
         }
+        System.out.println("pass--------------------VIA Login service-");
         return jwtService.generateToken(email);
     }
     public User getUserFromToken(String token){

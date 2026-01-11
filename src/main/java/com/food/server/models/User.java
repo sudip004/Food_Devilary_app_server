@@ -18,5 +18,6 @@ public class User {
    private String username;
    private String email;
    private String password;
+   private String Role;
    List<CartItem> cart = new ArrayList<>();
 }

@@ -33,11 +33,12 @@ public class AuthController extends BaseClass {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user, HttpServletResponse response) {
         String token = authService.login(user.getEmail(), user.getPassword());
-
+//      boolean isProd = System.getenv("RENDER") != null;
         Cookie cookie = new Cookie("jwt", token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setSecure(false);
+        cookie.setSecure(true);
+        cookie.setAttribute("SameSite", "None");
         cookie.setMaxAge(24 * 60 * 60); // 1 day
         response.addCookie(cookie);
         return ResponseEntity.ok("Login successful");
@@ -45,6 +46,7 @@ public class AuthController extends BaseClass {
 
     @GetMapping("/me")
     public ResponseEntity<User> getMe(@CookieValue(value = "jwt", required = false) String token) {
+        System.out.println("Tokken is -------------"+token);
         if (token == null) {
             return ResponseEntity.status(401).build(); 
         }
@@ -53,6 +55,7 @@ public class AuthController extends BaseClass {
         if (user == null) {
             return ResponseEntity.status(401).build();
         }
+        System.out.println(user);
 
         return ResponseEntity.ok(user);
     }
@@ -63,8 +66,21 @@ public class AuthController extends BaseClass {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setSecure(false); 
-        cookie.setMaxAge(0);
+        cookie.setMaxAge(24 * 60 * 60);
         response.addCookie(cookie);
         return ResponseEntity.ok("Logout successful");
     }
 }
+
+
+
+
+
+//  Cookie cookie = new Cookie("jwt", token);
+//         cookie.setHttpOnly(true);
+//         cookie.setPath("/");
+//         cookie.setSecure(true);
+//         cookie.setMaxAge(24 * 60 * 60);
+//         cookie.setAttribute("SameSite", "None");
+//         response.addCookie(cookie);
+//         return ResponseEntity.ok("Login successful");

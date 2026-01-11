@@ -11,3 +11,4 @@ public class Location {
     private double latitude=22.963;
     private double longitude=88.437 ;
 }
+ 

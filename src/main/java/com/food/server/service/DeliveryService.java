@@ -1,5 +1,5 @@
 package com.food.server.service;
 
-public class OrderService {
+public class DeliveryService {
     
 }

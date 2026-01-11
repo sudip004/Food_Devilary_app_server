@@ -21,13 +21,15 @@ public class JwtService {
     }
     
     public String generateToken(String email) {
-        // Logic to generate JWT token using userId
+        // Logic to generate JWT token using 
+          System.out.println("TOKEN IS GENERATED______________________");
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getKey())
                 .compact();
+              
     }
     public String extractEmail(String token) {
         // Logic to extract userId from JWT token

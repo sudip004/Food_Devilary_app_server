@@ -28,6 +28,9 @@ public class Order {
     private Location restaurantLocation;
     private Location customerLocation;
     private Location deliveryBoyLocation;
+
+    // Strore Deleveri boy id
+    private String deliveryBoyId;
 }
 
 
