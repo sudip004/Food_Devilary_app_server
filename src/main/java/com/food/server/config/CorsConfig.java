@@ -20,8 +20,7 @@ public class CorsConfig {
     @Value("${frontend.urls.production}")
     private String productionUrl;
 
-    @Value("${frontend.urls.render}")
-    private String renderUrl;
+   
 
     @Bean
     public CorsFilter corsFilter() {
@@ -33,7 +32,6 @@ public class CorsConfig {
         List<String> allowedOrigins = new ArrayList<>();
         allowedOrigins.add(localUrl);
         allowedOrigins.add(productionUrl);
-       // allowedOrigins.add(renderUrl);
         config.setAllowedOrigins(allowedOrigins);
 
         config.setAllowedHeaders(Arrays.asList(
