@@ -1,6 +1,8 @@
 package com.food.server.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ public class AuthService {
     @Autowired
     private JwtService jwtService;
 
+    @CacheEvict(value = "userByEmail", key = "#user.getEmail()", allEntries = false)
     public User signup(User user){
         if(userRepository.findByEmail(user.getEmail()).isPresent()){
             throw new RuntimeException("User already exists");
@@ -25,19 +28,24 @@ public class AuthService {
         user.setPassword(encoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
     public String login(String email, String password){
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = getUserByEmailCached(email);
         if(!encoder.matches(password, user.getPassword())){
             throw new RuntimeException("Invalid credentials");
         }
-        System.out.println("pass--------------------VIA Login service-");
         return jwtService.generateToken(email);
     }
-    public User getUserFromToken(String token){
-        String email = jwtService.extractEmail(token);
+
+    @Cacheable(value = "userByEmail", key = "#email")
+    public User getUserByEmailCached(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User getUserFromToken(String token){
+        String email = jwtService.extractEmail(token);
+        return getUserByEmailCached(email);
     }
 
 }

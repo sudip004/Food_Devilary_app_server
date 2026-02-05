@@ -14,25 +14,25 @@ public class JwtService {
     
     private static final String SECRET = "my_super_secret_key_for_jwt_signing_1234567890";
     
+    // ✅ Cache the secret key to avoid regenerating it on every token operation
+    private static final SecretKey KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
+    
     private long expiration = 86400000; // 1 day in milliseconds
 
     private SecretKey getKey(){
-        return Keys.hmacShaKeyFor(SECRET.getBytes());
+        return KEY;
     }
     
     public String generateToken(String email) {
-        // Logic to generate JWT token using 
-          System.out.println("TOKEN IS GENERATED______________________");
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getKey())
                 .compact();
-              
     }
+
     public String extractEmail(String token) {
-        // Logic to extract userId from JWT token
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()

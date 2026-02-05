@@ -1,16 +1,27 @@
 package com.food.server.config;
 
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class CorsConfig {
+
+    @Value("${frontend.urls.local}")
+    private String localUrl;
+
+    @Value("${frontend.urls.production}")
+    private String productionUrl;
+
+    @Value("${frontend.urls.render}")
+    private String renderUrl;
 
     @Bean
     public CorsFilter corsFilter() {
@@ -18,11 +29,12 @@ public class CorsConfig {
 
         config.setAllowCredentials(true);
 
-        // ✅ Allow local and deployed frontend URLs
-        config.setAllowedOrigins(Arrays.asList(
-            "http://localhost:5173",
-            "https://restorafood.netlify.app"
-        ));
+        // ✅ Allow local and deployed frontend URLs - read from properties
+        List<String> allowedOrigins = new ArrayList<>();
+        allowedOrigins.add(localUrl);
+        allowedOrigins.add(productionUrl);
+       // allowedOrigins.add(renderUrl);
+        config.setAllowedOrigins(allowedOrigins);
 
         config.setAllowedHeaders(Arrays.asList(
             "Origin", "Content-Type", "Accept", "Authorization"

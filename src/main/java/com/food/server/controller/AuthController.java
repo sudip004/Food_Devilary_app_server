@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CookieValue;
 
-
 import com.food.server.models.User;
 import com.food.server.service.AuthService;
 
@@ -25,7 +24,6 @@ public class AuthController extends BaseClass {
 
     @PostMapping("/signup")
     public ResponseEntity<User> signup(@RequestBody User user) {
-        System.out.println("Signup request received for email------------------======?????????: " + user.getEmail());
         User newUser = authService.signup(user);
         return ResponseEntity.ok(newUser);
     }
@@ -33,7 +31,6 @@ public class AuthController extends BaseClass {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user, HttpServletResponse response) {
         String token = authService.login(user.getEmail(), user.getPassword());
-//      boolean isProd = System.getenv("RENDER") != null;
         Cookie cookie = new Cookie("jwt", token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
@@ -46,7 +43,6 @@ public class AuthController extends BaseClass {
 
     @GetMapping("/me")
     public ResponseEntity<User> getMe(@CookieValue(value = "jwt", required = false) String token) {
-        System.out.println("Tokken is -------------"+token);
         if (token == null) {
             return ResponseEntity.status(401).build(); 
         }
@@ -55,7 +51,6 @@ public class AuthController extends BaseClass {
         if (user == null) {
             return ResponseEntity.status(401).build();
         }
-        System.out.println(user);
 
         return ResponseEntity.ok(user);
     }
@@ -66,16 +61,11 @@ public class AuthController extends BaseClass {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setSecure(false); 
-        cookie.setMaxAge(24 * 60 * 60);
+        cookie.setMaxAge(0);
         response.addCookie(cookie);
         return ResponseEntity.ok("Logout successful");
     }
 }
-
-
-
-
-
 //  Cookie cookie = new Cookie("jwt", token);
 //         cookie.setHttpOnly(true);
 //         cookie.setPath("/");
